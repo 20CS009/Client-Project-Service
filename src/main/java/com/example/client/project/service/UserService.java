@@ -77,14 +77,14 @@ public class UserService {
             String jwt = jwtUtil.generateToken(emailAddress, userName);
 
             //  Generate refresh token
-            var refreshToken = refreshTokenService.createRefreshToken(userEntity);
+            var refreshToken = jwtUtil.generateRefreshToken(emailAddress, userName);
 
             // 4. Create response
             LoginResponse response = new LoginResponse();
             response.setUserName(userName);
             response.setEmailAddress(emailAddress);
-            response.setJwtResponse(new JwtResponse(jwt, refreshToken.getToken(),userEntity.getEmail(),userEntity.getRole().name()));
-            response.setRefreshToken(refreshToken.getToken());
+            response.setJwtResponse(new JwtResponse(jwt, refreshToken,userEntity.getEmail(),userEntity.getRole().name()));
+            response.setRefreshToken(refreshToken);
 
             return ApiResponse.success("Login successful", response);
         } catch (Exception e) {

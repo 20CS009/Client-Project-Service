@@ -67,7 +67,7 @@ public class JwtUtil {
     }
 
     // Generate refresh token
-    public String generateRefreshToken(String email) {
+    public String createRefreshToken(UserDetails userDetails, String email) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("type", "refresh");
         return createToken(claims, email, REFRESH_TOKEN_EXPIRATION);
@@ -81,6 +81,15 @@ public class JwtUtil {
                 .build();
 
         return generateAccessToken(userDetails);
+    }
+
+    public String generateRefreshToken(String email, String username) {
+        UserDetails userDetails = User.withUsername(email)
+                .password("") // password not needed for token
+                .roles("USER") // optional
+                .build();
+
+        return createRefreshToken(userDetails, email);
     }
 
     private String createToken(Map<String, Object> claims, String subject, long expirationTime) {
